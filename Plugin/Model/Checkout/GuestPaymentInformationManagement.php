@@ -66,7 +66,9 @@ class GuestPaymentInformationManagement
 		$email,
         \Magento\Quote\Api\Data\PaymentInterface $paymentMethod,
         \Magento\Quote\Api\Data\AddressInterface $billingAddress
-    ) {	
+    ) {
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
 		/** @param string $comment */
 		$comment = NULL;
 		// get JSON post data
@@ -80,6 +82,7 @@ class GuestPaymentInformationManagement
 				// remove any HTML tags
 				$comment = $this->_filterManager->stripTags($data['comments']);
 				$comment = __('Order Comment: ') . $comment;
+                $checkoutSession->setOrderCommentstext($comment);
 			}
 		}
 		// run parent method and capture int $orderId
